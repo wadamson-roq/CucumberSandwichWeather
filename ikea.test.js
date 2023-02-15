@@ -39,17 +39,20 @@ test("Initially has a pause video button", async () => {
 
 
 test("Finding element after page redirect", async () => {
-    const location = "IKEA United Kingdom";
-
-    const storeSelect = await browser.getElementByCss('section.hero button.selected');
     const goShopping = await browser.getElementByCss('section.hero a.website-link');
-
     await goShopping.click();
-    await browser.waitForElementByCss('.hnf-page-container.hnf-2nd-line', timeout / 2);
-
+    const element = await browser.waitForElementByCss('.hnf-page-container.hnf-2nd-line', timeout / 2);
 }, timeout);
 
 
+test("Store search bar not visible until click", async () => {
+    await expect(() => browser.getElement("section.hero div.region-picker input.search-input")).rejects.toThrow();
+
+    const regionPicker = await browser.getElementByCss('div.region-picker.svelte-12457qr > div > div > button');
+    await regionPicker.click();
+
+    await browser.waitForElementByCss('section.hero div.region-picker input.search-input');
+});
 
 
     /*
@@ -73,11 +76,5 @@ test("Finding element after page redirect", async () => {
     const text = await element.getText();
 
     expect(text.search(location)).toBe(true);
-
-/*
-/*
-test("Initially has no location heading", async () => {
-    await expect(() => browser.getElement("wr-location-name-id")).rejects.toThrow();
-});
 
 */
